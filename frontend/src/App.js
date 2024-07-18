@@ -13,7 +13,7 @@ function App() {
   useEffect(() => {
     const fetchInsumos = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/stock');
+        const response = await axios.get('http://localhost:8080/api/stock');
         setInsumos(response.data);
       } catch (error) {
         console.error('Error al obtener insumos:', error);
@@ -25,7 +25,7 @@ function App() {
 
   const handleEliminar = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/stock/${id}`);
+      await axios.delete(`http://localhost:8080/api/stock/${id}`);
       setInsumos(insumos.filter((insumo) => insumo.id !== id));
     } catch (error) {
       setError('Error al eliminar el insumo: ' + error.message);
@@ -40,18 +40,18 @@ function App() {
       const existingInsumo = insumos.find(i => i.nombre === nombre);
 
       if (existingInsumo) {
-        await axios.put(`http://localhost:3000/api/stock/${existingInsumo.id}`, {
+        await axios.put(`http://localhost:8080/api/stock/${existingInsumo.id}`, {
           cantidad: existingInsumo.cantidad + parseInt(cantidad)
         });
       } else {
-        await axios.post('http://localhost:3000/api/stock', {
+        await axios.post('http://localhost:8080/api/stock', {
           nombre: nombre,
           cantidad: parseInt(cantidad),
           unidad: unidad
         });
       }
 
-      const response = await axios.get('http://localhost:3000/api/stock');
+      const response = await axios.get('http://localhost:8080/api/stock');
       setInsumos(response.data);
 
       setNombre('');
@@ -71,18 +71,18 @@ function App() {
       const existingInsumo = insumos.find(i => i.nombre === nombre);
 
       if (existingInsumo) {
-        await axios.put(`http://localhost:3000/api/stock/${existingInsumo.id}`, {
+        await axios.put(`http://localhost:8080/api/stock/${existingInsumo.id}`, {
           cantidad: existingInsumo.cantidad - parseInt(cantidad)
         });
       } else {
-        await axios.post('http://localhost:3000/api/stock', {
+        await axios.post('http://localhost:8080/api/stock', {
           nombre: nombre,
           cantidad: parseInt(cantidad),
           unidad: unidad
         });
       }
 
-      const response = await axios.get('http://localhost:3000/api/stock');
+      const response = await axios.get('http://localhost:8080/api/stock');
       setInsumos(response.data);
 
       setNombre('');

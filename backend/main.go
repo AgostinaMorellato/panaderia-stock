@@ -6,10 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strconv"
-	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
@@ -34,8 +31,8 @@ func InitDB(dataSourceName string) (*sql.DB, error) {
 }
 
 // Función para ejecutar un archivo SQL
-func executeSQLFile(db *sql.DB, filename string) error {
-	filepath := filepath.Join("..", "db", filename)
+/*func executeSQLFile(db *sql.DB, filename string) error {
+	filepath := filepath.Join("..", "panaderia-stock/db", filename)
 	// Leer el contenido del archivo SQL
 	sqlBytes, err := os.ReadFile(filepath)
 	if err != nil {
@@ -63,7 +60,7 @@ func executeSQLFile(db *sql.DB, filename string) error {
 	}
 
 	return nil
-}
+}*/
 
 type Insumo struct {
 	ID       int    `json:"id"`
@@ -74,7 +71,7 @@ type Insumo struct {
 
 func main() {
 	// DataSourceName formato: username:password@protocolo(dirección)/nombredb
-	dataSourceName := "root:rootagos@tcp(127.0.0.1:3306)/panaderia_stock?multiStatements=true"
+	dataSourceName := "root:rootagos@tcp(db:3306)/panaderia_stock?multiStatements=true"
 
 	var err error
 	db, err = InitDB(dataSourceName) // Inicializa la variable global db
@@ -85,12 +82,12 @@ func main() {
 
 	log.Println("Conexión exitosa a la base de datos!")
 
-	err = executeSQLFile(db, "init.sql")
+	/*err = executeSQLFile(db, "init.sql")
 	if err != nil {
 		log.Fatalf("Error al ejecutar el archivo SQL: %v\n", err)
 	}
 
-	log.Println("Archivo SQL ejecutado correctamente")
+	log.Println("Archivo SQL ejecutado correctamente")*/
 
 	// Crear el router
 	router := mux.NewRouter()
@@ -99,12 +96,12 @@ func main() {
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
 
-	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3001"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
 	allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 
 	// Inicia el servidor con los manejadores de CORS
-	http.ListenAndServe(":3000", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(router))
+	http.ListenAndServe(":8080", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(router))
 
 }
 
@@ -113,9 +110,10 @@ func getStock(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Base de datos no inicializada", http.StatusInternalServerError)
 		return
 	}
+
 	rows, err := db.Query("SELECT id, nombre, cantidad, unidad FROM stock")
 	if err != nil {
-		http.Error(w, "Error al consultar el stock", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer rows.Close()
@@ -123,11 +121,17 @@ func getStock(w http.ResponseWriter, r *http.Request) {
 	var insumos []Insumo
 	for rows.Next() {
 		var insumo Insumo
-		if err := rows.Scan(&insumo.ID, &insumo.Nombre, &insumo.Cantidad, &insumo.Unidad); err != nil {
-			http.Error(w, "Error al escanear filas", http.StatusInternalServerError)
+		err := rows.Scan(&insumo.ID, &insumo.Nombre, &insumo.Cantidad, &insumo.Unidad)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		insumos = append(insumos, insumo)
+	}
+
+	if err = rows.Err(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -141,12 +145,11 @@ func addInsumo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
 		return
 	}
-
 	defer r.Body.Close()
 
 	// Validar los campos del insumo
 	if insumo.Nombre == "" || insumo.Cantidad <= 0 {
-		http.Error(w, "Revisar que nombre, cantidad y unidad esten completos y sean válidos", http.StatusBadRequest)
+		http.Error(w, "Revisar que nombre, cantidad y unidad estén completos y sean válidos", http.StatusBadRequest)
 		return
 	}
 
@@ -164,7 +167,9 @@ func addInsumo(w http.ResponseWriter, r *http.Request) {
 	}
 	insumo.ID = int(id)
 
+	// Devolver el insumo con el ID asignado en formato JSON y código de estado 201
 	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(insumo)
 }
 

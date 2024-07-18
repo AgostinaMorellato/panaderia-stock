@@ -11,5 +11,6 @@ require github.com/felixge/httpsnoop v1.0.3 // indirect
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/gorilla/handlers v1.5.2
 )
