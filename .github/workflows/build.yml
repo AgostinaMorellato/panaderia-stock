@@ -123,5 +123,5 @@ jobs:
              sudo apt-get install -y xvfb
   
         - name: Run Integration Tests with xvfb-run
-         working-directory: frontend
-         run: xvfb-run -a npx codeceptjs run --steps -d
+          working-directory: frontend
+          run: xvfb-run -a npx codeceptjs run --steps -d
