@@ -1,6 +1,6 @@
 module agostinamorellato/panaderia-stock
 
-go 1.23
+go 1.21
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.5.2
