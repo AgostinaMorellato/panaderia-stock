@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
@@ -19,7 +19,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     depends_on:
@@ -28,7 +28,7 @@ services:
   db:
     build:
       context: ./db
-      dockerfile: Dockerfile.db
+      dockerfile: Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: rootagos
       MYSQL_DATABASE: panaderia_stock
