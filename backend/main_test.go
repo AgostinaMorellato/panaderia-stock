@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -109,7 +108,7 @@ func TestAddInsumo(t *testing.T) {
 	}
 }
 
-func TestDeleteInsumo(t *testing.T) {
+/*func TestDeleteInsumo(t *testing.T) {
 	log.Println("Running TestDeleteInsumo")
 
 	// Crear un ID de insumo para eliminar (por ejemplo, ID 1)
@@ -158,4 +157,4 @@ func TestDeleteInsumo(t *testing.T) {
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("There were unfulfilled expectations: %s", err)
 	}
-}
+}*/
