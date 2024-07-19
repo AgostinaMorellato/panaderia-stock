@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
@@ -31,8 +34,8 @@ func InitDB(dataSourceName string) (*sql.DB, error) {
 }
 
 // Función para ejecutar un archivo SQL
-/*func executeSQLFile(db *sql.DB, filename string) error {
-	filepath := filepath.Join("..", "panaderia-stock/db", filename)
+func executeSQLFile(db *sql.DB, filename string) error {
+	filepath := filepath.Join("..", "db", filename)
 	// Leer el contenido del archivo SQL
 	sqlBytes, err := os.ReadFile(filepath)
 	if err != nil {
@@ -60,7 +63,7 @@ func InitDB(dataSourceName string) (*sql.DB, error) {
 	}
 
 	return nil
-}*/
+}
 
 type Insumo struct {
 	ID       int    `json:"id"`
@@ -71,7 +74,7 @@ type Insumo struct {
 
 func main() {
 	// DataSourceName formato: username:password@protocolo(dirección)/nombredb
-	dataSourceName := "root:rootagos@tcp(db:3306)/panaderia_stock?multiStatements=true"
+	dataSourceName := "ly5zxxzt8321adlw:s9k9g8o3jihkteld@tcp(k9xdebw4k3zynl4u.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306)/fywxazl2ckiibk60?multiStatements=true"
 
 	var err error
 	db, err = InitDB(dataSourceName) // Inicializa la variable global db
@@ -82,12 +85,12 @@ func main() {
 
 	log.Println("Conexión exitosa a la base de datos!")
 
-	/*err = executeSQLFile(db, "init.sql")
+	err = executeSQLFile(db, "init.sql")
 	if err != nil {
 		log.Fatalf("Error al ejecutar el archivo SQL: %v\n", err)
 	}
 
-	log.Println("Archivo SQL ejecutado correctamente")*/
+	log.Println("Archivo SQL ejecutado correctamente")
 
 	// Crear el router
 	router := mux.NewRouter()

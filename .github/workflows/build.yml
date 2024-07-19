@@ -54,8 +54,57 @@ jobs:
              DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
              DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-    integration-test:
+    deploy:
         needs: publish-docker-image
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: Login to Heroku Container Registry
+          run: echo ${{ secrets.HEROKU_API_KEY }} | docker login -u=_ --password-stdin registry.heroku.com
+
+        - name: Configure Heroku CLI
+          run: |
+            echo -e "machine api.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY\nmachine git.heroku.com\n  login $HEROKU_EMAIL\n  password $HEROKU_API_KEY" > ~/.netrc
+      
+        - name: Build and push BACKEND
+          working-directory: ./backend 
+          run: |
+            docker build -t backend .
+            docker tag backend registry.heroku.com/panaderia-stock-backend-app/web
+            docker push registry.heroku.com/panaderia-stock-backend-app/web
+
+        - name: Release to Heroku BACKEND
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: heroku container:release web -a panaderia-stock-backend-app
+        
+        - name: Activate Deployment on Heroku BACKEND
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: heroku ps:scale web=1 -a panaderia-stock-backend-app
+
+        - name: Build and push FRONTEND
+          working-directory: ./frontend
+          run: |
+            docker build -t frontend .
+            docker tag frontend registry.heroku.com/panaderia-stock-frontend-app/web
+            docker push registry.heroku.com/panaderia-stock-frontend-app/web
+
+        - name: Release to Heroku FRONTEND
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: heroku container:release web -a panaderia-stock-frontend-app
+        
+        - name: Activate Deployment on Heroku FRONTEND
+          env:
+            HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          run: heroku ps:scale web=1 -a panaderia-stock-frontend-app
+         
+    integration-test:
+        needs: deploy
         runs-on: ubuntu-latest
   
         steps:
