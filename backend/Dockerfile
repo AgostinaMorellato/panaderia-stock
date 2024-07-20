@@ -14,14 +14,14 @@ RUN go mod download
 COPY . .
 
 # Añade wait-for-it script
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+#ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
+#RUN chmod +x /wait-for-it.sh
 
 # Build the Go app
-RUN go build -o main .
+#RUN go build -o main .
 
 # Expose port 8080 to the outside world
-EXPOSE 8080
+#EXPOSE 8080
 
 # Command to run the executable
-CMD ["/wait-for-it.sh", "db:3306", "--", "./main"]
+CMD ["go", "run", "main.go", "db.go"]

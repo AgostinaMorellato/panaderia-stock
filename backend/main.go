@@ -3,7 +3,8 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
+
+	//"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -16,7 +17,7 @@ import (
 var db *sql.DB // Declaración de la variable global db
 
 // Función para inicializar la conexión a la base de datos
-func InitDB(dataSourceName string) (*sql.DB, error) {
+/*func InitDB(dataSourceName string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", dataSourceName)
 	if err != nil {
 		return nil, fmt.Errorf("error opening database: %v", err)
@@ -28,7 +29,7 @@ func InitDB(dataSourceName string) (*sql.DB, error) {
 	}
 
 	return db, nil
-}
+}*/
 
 // Función para ejecutar un archivo SQL
 /*func executeSQLFile(db *sql.DB, filename string) error {
@@ -71,7 +72,7 @@ type Insumo struct {
 
 func main() {
 	// DataSourceName formato: username:password@protocolo(dirección)/nombredb
-	dataSourceName := "ly5zxxzt8321adlw:s9k9g8o3jihkteld@tcp(k9xdebw4k3zynl4u.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306)/fywxazl2ckiibk60?multiStatements=true"
+	dataSourceName := "wzdmwrg5qn734yj0:cfugoznnbbov4lr9@rnr56s6e2uk326pj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306)/t41qgcrzm28aij2i?multiStatements=true"
 
 	var err error
 	db, err = InitDB(dataSourceName) // Inicializa la variable global db

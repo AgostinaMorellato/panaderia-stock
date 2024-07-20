@@ -1,12 +1,12 @@
 package main
 
-/*
 import (
 	"database/sql"
 	"fmt"
-	"os"
-	"path/filepath"
-	"strings"
+
+	//"os"
+	//"path/filepath"
+	//"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -28,7 +28,8 @@ func InitDB(dataSourceName string) (*sql.DB, error) {
 
 	return db, nil
 }
-func executeSQLFile(db *sql.DB, filename string) error {
+
+/*func executeSQLFile(db *sql.DB, filename string) error {
 	filepath := filepath.Join("..", "db", filename)
 	// Leer el contenido del archivo SQL
 	sqlBytes, err := os.ReadFile(filepath)
