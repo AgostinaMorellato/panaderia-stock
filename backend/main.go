@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
+	"os"
 
 	//"fmt"
 	"log"
@@ -10,8 +12,8 @@ import (
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 )
 
 var db *sql.DB // Declaración de la variable global db
@@ -63,11 +65,21 @@ var db *sql.DB // Declaración de la variable global db
 	return nil
 }*/
 
+var PORT = getPort()
+
 type Insumo struct {
 	ID       int    `json:"id"`
 	Nombre   string `json:"nombre"`
 	Cantidad int    `json:"cantidad"`
 	Unidad   string `json:"unidad"`
+}
+
+func getPort() string {
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		PORT = "8080" // Puerto predeterminado si no se especifica
+	}
+	return PORT
 }
 
 func main() {
@@ -97,12 +109,15 @@ func main() {
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
 
-	allowedOrigins := handlers.AllowedOrigins([]string{"https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com"})
+	/*allowedOrigins := handlers.AllowedOrigins([]string{"https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
-	allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
+	allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})*/
 
 	// Inicia el servidor con los manejadores de CORS
-	http.ListenAndServe(":8080", handlers.CORS(allowedOrigins, allowedMethods, allowedHeaders)(router))
+	corsHandler := cors.Default().Handler(router)
+
+	fmt.Printf("Server is running on :%s\n", PORT)
+	log.Fatal(http.ListenAndServe(":"+PORT, corsHandler))
 
 }
 

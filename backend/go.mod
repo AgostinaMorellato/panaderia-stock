@@ -12,4 +12,5 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
+	github.com/rs/cors v1.11.0
 )
