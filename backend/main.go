@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 
-	//"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -31,38 +30,6 @@ var db *sql.DB // Declaración de la variable global db
 	}
 
 	return db, nil
-}*/
-
-// Función para ejecutar un archivo SQL
-/*func executeSQLFile(db *sql.DB, filename string) error {
-	filepath := filepath.Join("..", "db", filename)
-	// Leer el contenido del archivo SQL
-	sqlBytes, err := os.ReadFile(filepath)
-	if err != nil {
-		return err
-	}
-
-	// Convertir el contenido del archivo a string
-	sql := string(sqlBytes)
-
-	// Remover cualquier caracter de retorno de carro adicional que pueda causar problemas
-	sql = strings.ReplaceAll(sql, "\r", "")
-
-	// Dividir el contenido del archivo en sentencias individuales
-	sqlStatements := strings.Split(sql, ";")
-
-	// Ejecutar cada sentencia individualmente
-	for _, statement := range sqlStatements {
-		statement = strings.TrimSpace(statement)
-		if statement != "" {
-			_, err = db.Exec(statement)
-			if err != nil {
-				return fmt.Errorf("error ejecutando la sentencia %q: %v", statement, err)
-			}
-		}
-	}
-
-	return nil
 }*/
 
 var PORT = getPort()
@@ -94,13 +61,6 @@ func main() {
 	defer db.Close()
 
 	log.Println("Conexión exitosa a la base de datos!")
-
-	/*err = executeSQLFile(db, "init.sql")
-	if err != nil {
-		log.Fatalf("Error al ejecutar el archivo SQL: %v\n", err)
-	}
-
-	log.Println("Archivo SQL ejecutado correctamente")*/
 
 	// Crear el router
 	router := mux.NewRouter()
