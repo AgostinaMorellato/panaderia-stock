@@ -3,7 +3,7 @@ exports.config = {
     output: './output',
     helpers: {
       Puppeteer: {
-        url: 'http://localhost:3000',
+        url: 'https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com',
         show: true,
         windowSize: '1200x900'
       }

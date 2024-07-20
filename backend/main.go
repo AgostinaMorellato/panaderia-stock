@@ -99,7 +99,7 @@ func main() {
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
 
-	allowedOrigins := handlers.AllowedOrigins([]string{"http://localhost:3000"})
+	allowedOrigins := handlers.AllowedOrigins([]string{"https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com"})
 	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
 	allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})
 
