@@ -67,7 +67,7 @@ func main() {
 	router.HandleFunc("/api/stock", addInsumo).Methods("POST")
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
-	router.HandleFunc("/api/stock/{id}", descontarInsumo).Methods("PUT")
+	//router.HandleFunc("/api/stock/{id}", descontarInsumo).Methods("PUT")
 
 	// Configurar CORS
 	corsOptions := cors.New(cors.Options{
@@ -205,7 +205,7 @@ func updateInsumo(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(insumo)
 }
 
-func descontarInsumo(w http.ResponseWriter, r *http.Request) {
+/*func descontarInsumo(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -236,4 +236,4 @@ func descontarInsumo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-}
+}*/

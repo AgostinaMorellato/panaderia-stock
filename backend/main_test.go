@@ -143,7 +143,7 @@ func TestDeleteInsumo(t *testing.T) {
 	}
 }
 
-func TestDescontarInsumo(t *testing.T) {
+/*func TestDescontarInsumo(t *testing.T) {
 	log.Println("Running TestDescontarInsumo")
 
 	Db, mock, err := sqlmock.New()
@@ -183,56 +183,5 @@ func TestDescontarInsumo(t *testing.T) {
 	// Verificar que todas las expectativas fueron satisfechas
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
-	}
-}
-
-/*func TestDeleteInsumo(t *testing.T) {
-	log.Println("Running TestDeleteInsumo")
-
-	// Crear un ID de insumo para eliminar (por ejemplo, ID 1)
-	id := 1
-
-	// Mockear la base de datos para simular la eliminación del insumo
-	Db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer Db.Close()
-
-	db = Db
-
-	// Expect DELETE query
-	mock.ExpectExec("DELETE FROM stock WHERE id = ?").WithArgs(id).WillReturnResult(sqlmock.NewResult(0, 1))
-
-	// Crear una solicitud HTTP DELETE con el ID del insumo a eliminar
-	req, err := http.NewRequest("DELETE", fmt.Sprintf("/api/stock/%d", id), nil)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// Ejecutar el handler deleteInsumo
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(deleteInsumo)
-
-	handler.ServeHTTP(rr, req)
-
-	log.Printf("Status Code: %d", rr.Code)
-	log.Printf("Response Body: %s", rr.Body.String())
-
-	// Verificar que el código de estado sea 200 OK
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("Handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
-	}
-
-	// Verificar que el cuerpo de la respuesta esté vacío
-	if rr.Body.String() != "" {
-		t.Errorf("Handler returned unexpected body: got %v want %v",
-			rr.Body.String(), "")
-	}
-
-	// Verificar que se completaron todas las expectativas mockeadas
-	if err := mock.ExpectationsWereMet(); err != nil {
-		t.Errorf("There were unfulfilled expectations: %s", err)
 	}
 }*/
