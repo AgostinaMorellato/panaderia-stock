@@ -1,8 +1,7 @@
 Feature('Stock Management');
 
 Scenario('Agregar un nuevo insumo', async ({ I }) => {
-    I.amOnPage('/');  // Asegúrate de estar en la página correcta
-
+    I.amOnPage('/');  
     I.wait(3);
     // Obtener la cantidad inicial de insumos
     const initialItemCount = await I.grabNumberOfVisibleElements('table tbody tr');

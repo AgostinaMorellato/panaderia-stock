@@ -4,10 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"os"
-
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -69,16 +68,19 @@ func main() {
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
 
-	/*allowedOrigins := handlers.AllowedOrigins([]string{"https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com"})
-	allowedMethods := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "PUT"})
-	allowedHeaders := handlers.AllowedHeaders([]string{"Content-Type", "Authorization"})*/
+	// Configurar CORS
+	corsOptions := cors.New(cors.Options{
+		AllowedOrigins:   []string{"https://panaderia-stock-frontend-app-6df615a13979.herokuapp.com"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
 
 	// Inicia el servidor con los manejadores de CORS
-	corsHandler := cors.Default().Handler(router)
+	corsHandler := corsOptions.Handler(router)
 
 	fmt.Printf("Server is running on :%s\n", PORT)
 	log.Fatal(http.ListenAndServe(":"+PORT, corsHandler))
-
 }
 
 func getStock(w http.ResponseWriter, r *http.Request) {
@@ -165,6 +167,7 @@ func deleteInsumo(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
 func updateInsumo(w http.ResponseWriter, r *http.Request) {
 	idStr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idStr)
