@@ -51,7 +51,7 @@ func getPort() string {
 
 func main() {
 	// DataSourceName formato: username:password@protocolo(dirección)/nombredb
-	dataSourceName := "wzdmwrg5qn734yj0:cfugoznnbbov4lr9@rnr56s6e2uk326pj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306)/t41qgcrzm28aij2i?multiStatements=true"
+	dataSourceName := "wzdmwrg5qn734yj0:cfugoznnbbov4lr9@(rnr56s6e2uk326pj.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306)/t41qgcrzm28aij2i?multiStatements=true"
 
 	var err error
 	db, err = InitDB(dataSourceName) // Inicializa la variable global db
