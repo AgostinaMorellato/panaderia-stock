@@ -24,7 +24,7 @@ func TestGetStock(t *testing.T) {
 	db = Db
 
 	rows := sqlmock.NewRows([]string{"id", "nombre", "cantidad", "unidad"}).
-		AddRow(1, "example", 10, "kg")
+		AddRow(1, "Manteca", 10, "kg")
 	mock.ExpectQuery("SELECT id, nombre, cantidad, unidad FROM stock").WillReturnRows(rows)
 
 	req, err := http.NewRequest("GET", "/api/stock", nil)
@@ -105,6 +105,84 @@ func TestAddInsumo(t *testing.T) {
 
 	if response.ID != 1 || response.Nombre != "harina" || response.Cantidad != 10 || response.Unidad != "kg" {
 		t.Errorf("Expected created insumo to match input data, but got %+v", response)
+	}
+}
+func TestDeleteInsumo(t *testing.T) {
+	log.Println("Running TestDeleteInsumo")
+
+	Db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer Db.Close()
+
+	db = Db
+
+	// Simular la eliminación del insumo
+	mock.ExpectExec("DELETE FROM stock WHERE id = ?").
+		WithArgs(1).WillReturnResult(sqlmock.NewResult(1, 1))
+
+	req, err := http.NewRequest("DELETE", "/api/stock/1", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	router := mux.NewRouter()
+	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
+	router.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Verificar que todas las expectativas fueron satisfechas
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
+	}
+}
+
+func TestDescontarInsumo(t *testing.T) {
+	log.Println("Running TestDescontarInsumo")
+
+	Db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer Db.Close()
+
+	db = Db
+
+	// Simular la actualización de la cantidad del insumo
+	mock.ExpectExec("UPDATE stock SET cantidad = cantidad - ? WHERE id = ?").
+		WithArgs(5, 1).WillReturnResult(sqlmock.NewResult(1, 1))
+
+	// Datos del insumo a descontar
+	data := Insumo{Cantidad: 5}
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req, err := http.NewRequest("PUT", "/api/stock/1", bytes.NewBuffer(jsonData))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	router := mux.NewRouter()
+	router.HandleFunc("/api/stock/{id}", descontarInsumo).Methods("PUT")
+	router.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v",
+			status, http.StatusOK)
+	}
+
+	// Verificar que todas las expectativas fueron satisfechas
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 }
 

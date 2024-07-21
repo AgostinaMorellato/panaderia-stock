@@ -67,6 +67,7 @@ func main() {
 	router.HandleFunc("/api/stock", addInsumo).Methods("POST")
 	router.HandleFunc("/api/stock/{id}", deleteInsumo).Methods("DELETE")
 	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
+	router.HandleFunc("/api/stock/{id}", descontarInsumo).Methods("PUT")
 
 	// Configurar CORS
 	corsOptions := cors.New(cors.Options{
@@ -202,4 +203,37 @@ func updateInsumo(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(insumo)
+}
+
+func descontarInsumo(w http.ResponseWriter, r *http.Request) {
+	idStr := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID de insumo inválido", http.StatusBadRequest)
+		return
+	}
+
+	var insumo Insumo
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&insumo); err != nil {
+		http.Error(w, "Error al decodificar la solicitud", http.StatusBadRequest)
+		return
+	}
+
+	defer r.Body.Close()
+
+	// Validar la cantidad a descontar
+	if insumo.Cantidad <= 0 {
+		http.Error(w, "Cantidad a descontar debe ser mayor a cero", http.StatusBadRequest)
+		return
+	}
+
+	// Descontar la cantidad del insumo en la base de datos
+	_, err = db.Exec("UPDATE stock SET cantidad = cantidad - ? WHERE id = ?", insumo.Cantidad, id)
+	if err != nil {
+		http.Error(w, "Error al descontar la cantidad del insumo", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
