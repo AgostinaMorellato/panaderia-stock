@@ -39,6 +39,7 @@ Scenario('Agregar un nuevo insumo', ({ I }) => {
   });
 });
 
+
 Scenario('Actualizar un insumo existente', ({ I }) => {
   I.amOnPage('/');
   I.wait(3);
