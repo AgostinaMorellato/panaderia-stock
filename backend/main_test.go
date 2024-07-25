@@ -45,11 +45,11 @@ func TestGetStock(t *testing.T) {
 	log.Printf("Status Code: %d", rr.Code)
 	log.Printf("Response Body: %s", rr.Body.String())
 
-	/*expected := `[{"id":1,"nombre":"example","cantidad":10,"unidad":"kg"}]`
-	if rr.Body.String() = expected {
+	expected := `[{"id":1,"nombre":"Manteca","cantidad":10,"unidad":"kg"}]`
+	if rr.Body.String() == expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
-	}*/
+	}
 
 	// Verificar que todas las expectativas fueron satisfechas
 	if err := mock.ExpectationsWereMet(); err != nil {
