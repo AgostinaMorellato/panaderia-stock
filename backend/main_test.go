@@ -24,7 +24,7 @@ func TestGetStock(t *testing.T) {
 	db = Db
 
 	rows := sqlmock.NewRows([]string{"id", "nombre", "cantidad", "unidad"}).
-		AddRow(1, "Manteca", 10, "kg")
+		AddRow(1, "Monitor", 10, "kg")
 	mock.ExpectQuery("SELECT id, nombre, cantidad, unidad FROM stock").WillReturnRows(rows)
 
 	req, err := http.NewRequest("GET", "/api/stock", nil)
