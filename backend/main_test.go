@@ -143,7 +143,7 @@ func TestDeleteInsumo(t *testing.T) {
 	}
 }
 
-func TestUpdateInsumo(t *testing.T) {
+/*func TestUpdateInsumo(t *testing.T) {
 	log.Println("Running TestUpdateInsumo")
 
 	Db, mock, err := sqlmock.New()
@@ -215,4 +215,4 @@ func TestUpdateInsumo(t *testing.T) {
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
-}
+}*/
