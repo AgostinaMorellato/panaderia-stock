@@ -181,11 +181,15 @@ func TestUpdateInsumo(t *testing.T) {
 			status, http.StatusOK)
 	}
 
+	if rr.Code == http.StatusInternalServerError {
+		t.Fatalf("Internal server error occurred: %v", rr.Body.String())
+	}
+
 	// Verificar que el cuerpo de la respuesta contiene los datos del insumo actualizado
 	var response Insumo
 	err = json.Unmarshal(rr.Body.Bytes(), &response)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("Error unmarshalling response body: %v", err)
 	}
 
 	if response.ID != updatedItem.ID || response.Nombre != updatedItem.Nombre || response.Cantidad != updatedItem.Cantidad || response.Unidad != updatedItem.Unidad {
