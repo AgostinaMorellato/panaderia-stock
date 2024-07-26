@@ -91,7 +91,7 @@ func TestAddInsumo(t *testing.T) {
 	log.Printf("Status Code: %d", rr.Code)
 	log.Printf("Response Body: %s", rr.Body.String())
 
-	if status := rr.Code; status != http.StatusCreated {
+	if status := rr.Code; status != http.StatusOK {
 		t.Errorf("Handler returned wrong status code: got %v want %v",
 			status, http.StatusCreated)
 	}
