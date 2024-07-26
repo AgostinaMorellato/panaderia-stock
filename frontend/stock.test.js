@@ -42,7 +42,7 @@ Scenario('Agregar un nuevo insumo', ({ I }) => {
 
 Scenario('Actualizar un insumo existente', ({ I }) => {
   I.amOnPage('/');
-  I.wait(3);
+  I.wait(10);
   I.fillField('Nombre', 'Manteca');
   I.fillField('Cantidad', 5);
   I.fillField('Unidad', 'kg');
@@ -54,7 +54,7 @@ Scenario('Actualizar un insumo existente', ({ I }) => {
 
 Scenario('Descontar un insumo existente', ({ I }) => {
   I.amOnPage('/');
-  I.wait(3);
+  I.wait(10);
   I.fillField('Nombre', 'Manteca');
   I.fillField('Cantidad', 5);
   I.fillField('Unidad', 'kg');

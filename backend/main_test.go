@@ -156,27 +156,23 @@ func TestDeleteInsumo(t *testing.T) {
 
 	// Inicialmente insertamos un insumo en la base de datos mock
 	initialItem := Insumo{ID: 1, Nombre: "harina", Cantidad: 10, Unidad: "kg"}
+	mock.ExpectExec("INSERT INTO stock").WithArgs(initialItem.Nombre, initialItem.Cantidad, initialItem.Unidad).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	// Simulamos la consulta de la cantidad actual
 	mock.ExpectQuery("SELECT cantidad FROM stock WHERE id = ?").
 		WithArgs(initialItem.ID).WillReturnRows(sqlmock.NewRows([]string{"cantidad"}).AddRow(initialItem.Cantidad))
 
-	// Nueva cantidad que queremos agregar
-	addedQuantity := 20
-
-	// La nueva cantidad debe ser la suma de la cantidad existente y la nueva cantidad
-	newQuantity := initialItem.Cantidad + addedQuantity
-
 	// Actualizamos el insumo sumando la cantidad
-	mock.ExpectExec("UPDATE stock SET cantidad = ? WHERE id = ?").
-		WithArgs(newQuantity, initialItem.ID).WillReturnResult(sqlmock.NewResult(1, 1))
-
-	// Simulamos la solicitud de actualización
-	updatedItem := Insumo{ID: 1, Nombre: "harina", Cantidad: addedQuantity, Unidad: "kg"}
+	updatedItem := Insumo{ID: 1, Nombre: "harina", Cantidad: 20, Unidad: "kg"}
 	jsonData, err := json.Marshal(updatedItem)
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// La nueva cantidad debe ser la suma de la cantidad existente y la nueva cantidad
+	newQuantity := initialItem.Cantidad + updatedItem.Cantidad
+	mock.ExpectExec("UPDATE stock SET cantidad = ? WHERE id = ?").
+		WithArgs(newQuantity, updatedItem.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	req, err := http.NewRequest("PUT", "/api/stock/1", bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -207,7 +203,7 @@ func TestDeleteInsumo(t *testing.T) {
 		t.Fatalf("Error unmarshalling response body: %v", err)
 	}
 
-	if response.Cantidad != newQuantity {
+	if response.ID != updatedItem.ID || response.Nombre != updatedItem.Nombre || response.Cantidad != newQuantity || response.Unidad != updatedItem.Unidad {
 		t.Errorf("Expected updated insumo to match input data, but got %+v", response)
 	}
 
@@ -215,4 +211,5 @@ func TestDeleteInsumo(t *testing.T) {
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
-}*/
+}
+*/
