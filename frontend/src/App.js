@@ -76,11 +76,6 @@ function App() {
         });
       } else {
         setError('El insumo a descontar no existe');
-        /*await axios.post('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock', {
-          nombre: nombre,
-          cantidad: parseInt(cantidad),
-          unidad: unidad
-        })*/
       }
 
       const response = await axios.get('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock');

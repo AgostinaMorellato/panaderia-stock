@@ -45,7 +45,7 @@ func TestGetStock(t *testing.T) {
 	log.Printf("Status Code: %d", rr.Code)
 	log.Printf("Response Body: %s", rr.Body.String())
 
-	expected := `[{"id":1,"nombre":"Manteca","cantidad":10,"unidad":"kg"}]`
+	expected := `[{"id":1,"nombre":"Harina","cantidad":10,"unidad":"kg"}]`
 	if rr.Body.String() == expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)
