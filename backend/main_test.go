@@ -142,9 +142,8 @@ func TestDeleteInsumo(t *testing.T) {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
 }
-
-/*func TestDescontarInsumo(t *testing.T) {
-	log.Println("Running TestDescontarInsumo")
+func TestUpdateInsumo(t *testing.T) {
+	log.Println("Running TestUpdateInsumo")
 
 	Db, mock, err := sqlmock.New()
 	if err != nil {
@@ -154,16 +153,15 @@ func TestDeleteInsumo(t *testing.T) {
 
 	db = Db
 
-	// Simular la actualización de la cantidad del insumo
-	mock.ExpectExec("UPDATE stock SET cantidad = cantidad - ? WHERE id = ?").
-		WithArgs(5, 1).WillReturnResult(sqlmock.NewResult(1, 1))
-
-	// Datos del insumo a descontar
-	data := Insumo{Cantidad: 5}
-	jsonData, err := json.Marshal(data)
+	updatedItem := Insumo{ID: 1, Nombre: "harina", Cantidad: 20, Unidad: "kg"}
+	jsonData, err := json.Marshal(updatedItem)
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// Expect UPDATE query and return a result indicating one row affected
+	mock.ExpectExec("UPDATE stock SET cantidad = ? WHERE id = ?").
+		WithArgs(updatedItem.Cantidad, updatedItem.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	req, err := http.NewRequest("PUT", "/api/stock/1", bytes.NewBuffer(jsonData))
 	if err != nil {
@@ -172,16 +170,30 @@ func TestDeleteInsumo(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 	router := mux.NewRouter()
-	router.HandleFunc("/api/stock/{id}", descontarInsumo).Methods("PUT")
+	router.HandleFunc("/api/stock/{id}", updateInsumo).Methods("PUT")
 	router.ServeHTTP(rr, req)
 
+	log.Printf("Status Code: %d", rr.Code)
+	log.Printf("Response Body: %s", rr.Body.String())
+
 	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
+		t.Errorf("Handler returned wrong status code: got %v want %v",
 			status, http.StatusOK)
+	}
+
+	// Verificar que el cuerpo de la respuesta contiene los datos del insumo actualizado
+	var response Insumo
+	err = json.Unmarshal(rr.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if response.ID != updatedItem.ID || response.Nombre != updatedItem.Nombre || response.Cantidad != updatedItem.Cantidad || response.Unidad != updatedItem.Unidad {
+		t.Errorf("Expected updated insumo to match input data, but got %+v", response)
 	}
 
 	// Verificar que todas las expectativas fueron satisfechas
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Errorf("there were unfulfilled expectations: %s", err)
 	}
-}*/
+}

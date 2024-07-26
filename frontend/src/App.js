@@ -73,21 +73,23 @@ function App() {
       if (existingInsumo) {
         await axios.put(`https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock/${existingInsumo.id}`, {
           cantidad: existingInsumo.cantidad - parseInt(cantidad)
-        });
-      } else {
-        await axios.post('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock', {
-          nombre: nombre,
-          cantidad: parseInt(cantidad),
-          unidad: unidad
-        });
-      }
-
-      const response = await axios.get('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock');
+        })
+        const response = await axios.get('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock');
       setInsumos(response.data);
 
       setNombre('');
       setCantidad('');
-      setUnidad('');
+      setUnidad('');;
+      } else {
+        setError('El insumo a descontar no existe ');
+        /*await axios.post('https://panaderia-stock-backend-app-0a5abc091ada.herokuapp.com/api/stock', {
+          nombre: nombre,
+          cantidad: parseInt(cantidad),
+          unidad: unidad
+        });*/
+      }
+
+      
     } catch (error) {
       setError('Error al descontar el insumo: ' + error.message);
     } finally {
