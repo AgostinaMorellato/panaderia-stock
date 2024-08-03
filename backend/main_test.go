@@ -96,7 +96,7 @@ func TestAddInsumo(t *testing.T) {
 			status, http.StatusCreated)
 	}
 
-	// Verificar que el cuerpo de la respuesta contiene los datos del insumo creado
+	// Verificar que el cuerpo de la respuesta contiene los datos del insumo
 	var response Insumo
 	err = json.Unmarshal(rr.Body.Bytes(), &response)
 	if err != nil {
